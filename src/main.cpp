@@ -1,3 +1,23 @@
+/*
+# ################################################################################################ #
+# File: main.cpp                                                                                   #
+# Project: One Button Remote                                 #
+# Created Date: Monday, March 24th 2025, 9:09:20 pm                                                #
+# Author: Jeffery Seiffert                                                                         #
+# -----                                                                                            #
+# Last Modified: Tue Apr 29 2025                                                                   #
+# Modified By: Jeffery Seiffert                                                                    #
+# -----                                                                                            #
+# Copyright (c) 2025 Jeffery A. Seiffert                                                           #
+#                                                                                                  #
+# GNU General Public License v3.0                                                                  #
+# -----                                                                                            #
+# HISTORY:                                                                                         #
+# Date      	By	Comments                                                                       #
+# ----------	---	----------------------------------------------------------                     #
+#                                                                                                  #
+# ################################################################################################ #
+*/
 
 #include <Arduino.h>
 #include <Esp.h>
@@ -34,16 +54,6 @@
 
 #define mS_TO_M_FACTOR 60000ULL // Conversion factor for milliseconds to minute
 #define SLEEP_DELAY_M 1         // Wait Time after button push for the ESP32 to go to sleep (in Minutes)
-
-/*
-   Configuration (HA) :
-    sensor:
-      platform: mqtt
-      state_topic: 'bedroom/remote/battery'
-      name: 'Battery Voltage'
-      unit_of_measurement: 'v'
-      value_template: '{{ value_json.batt }}'
-*/
 
 // MQTT: ID, server IP, port, username and password
 const PROGMEM char *MQTT_CLIENT_ID = "remote_button1";
