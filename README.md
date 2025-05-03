@@ -17,6 +17,8 @@ I'm just a Hobbiest Programmer and at Electronics so feel free to make suggestio
 
 I use this One Button Remote every day.
 
+For the Hardware assembly and 3D printed case go here: https://www.thingiverse.com/thing:7022509
+
 There is only one program file so you should be able to bring in the code into Arduino 2.x and program your ESP32C3 from there if your not familiar with VSCode and PlatformIO. Probably just create a new project and copy in the code. Make sure to add the libraries listed in the platformio.ini file.
 
 I haven't tried it but programming the ESP32C3 with ESPHome should work though not directly with the SONOFF Basic with Tasmota.
