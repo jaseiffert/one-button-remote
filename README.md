@@ -1,6 +1,9 @@
 # one-button-remote
 XIAO ESP32C3 One Button Remote for SONOFF Basic Switch Programmed with Tasmota
 
+In the includes folder I added a secrets.h file that holds the Wifi and MQTT User Names and 
+Passwords.
+
 Things you will need to configure in the code.
 - WiFi SSID and Password
 - MQTT_CLIENT_ID

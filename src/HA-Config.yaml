@@ -6,10 +6,7 @@ sensor:
     value_template: "{{ value_json.batt }}"
     unit_of_measurement: "v"
 
-text:
   - name: "Remote Lamp Power"
     unique_id: bedroom_lamp_remote_pwr
     state_topic: "bedroom/lamp/remote"
     value_template: "{{ value_json.pwr }}"
-    command_topic: "Power Source"
-    

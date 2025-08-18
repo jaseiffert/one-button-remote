@@ -5,7 +5,7 @@
 # Created Date: Monday, March 24th 2025, 9:09:20 pm                                                #
 # Author: Jeffery Seiffert                                                                         #
 # -----                                                                                            #
-# Last Modified: Tue Apr 29 2025                                                                   #
+# Last Modified: Sun Aug 17 2025                                                                   #
 # Modified By: Jeffery Seiffert                                                                    #
 # -----                                                                                            #
 # Copyright (c) 2025 Jeffery A. Seiffert                                                           #
@@ -15,7 +15,8 @@
 # HISTORY:                                                                                         #
 # Date      	By	Comments                                                                       #
 # ----------	---	----------------------------------------------------------                     #
-#                                                                                                  #
+# 08/17/2025    JS  Added Secrets.h to hold passwords. Sent all MQTT Data at once in same Json pkg #
+#                   Added Define for NeoPixel Brightness, global setting                           #
 # ################################################################################################ #
 */
 
@@ -27,6 +28,8 @@
 #include <Adafruit_NeoPixel.h>
 
 #include <PubSubClient.h>
+
+#include "secrets.h"
 
 #define PRINT_DEBUG 1
 
@@ -45,6 +48,7 @@
 #define FIVE_V_PIN D1
 #define LED_COUNT 1
 #define MQTT_BATT_VOLTAGE 0
+#define NEOPIXEL_Brightness 30
 
 #define uS_TO_S_FACTOR 1000000ULL // Conversion factor for microseconds to seconds
 #define TIME_TO_SLEEP_uS 20       // Time ESP32 will go to sleep (in seconds)
@@ -59,8 +63,8 @@
 const PROGMEM char *MQTT_CLIENT_ID = "remote_button1";
 const PROGMEM char *MQTT_SERVER_IP = "192.168.15.92";
 const PROGMEM uint16_t MQTT_SERVER_PORT = 1883;
-const PROGMEM char *MQTT_USER = "mqtt";
-const PROGMEM char *MQTT_PASSWORD = "mqtt";
+const PROGMEM char *MQTT_USER = MQTTUSER;
+const PROGMEM char *MQTT_PASSWORD = MQTTPWD;
 // MQTT: topic
 const PROGMEM char *MQTT_SENSOR_TOPIC = "bedroom/lamp/remote";
 
@@ -72,8 +76,8 @@ int buttonState = 0;
 Adafruit_NeoPixel pixel(LED_COUNT, LED_PIN, NEO_RGB + NEO_KHZ800);
 
 /* Your WiFi Credentials */
-const char *ssid = "ATT";       // SSID
-const char *password = "pwd"; // Password
+const char *ssid = WIFI_USER;       // SSID
+const char *password = WIFI_PWD; // Password
 
 // Your Domain name with URL path or IP address with path
 const char *serverName = "http://192.168.15.96/cm?cmnd=Power%20Toggle";
@@ -107,7 +111,7 @@ void setup()
     // initialize the NeoPixel LED
     pixel.begin();
     pixel.show();
-    pixel.setBrightness(50);
+    pixel.setBrightness(NEOPIXEL_Brightness);
 
     // Print the wakeup reason for ESP32
     print_wakeup_reason();
@@ -117,6 +121,7 @@ void setup()
     // {
     //     debugpln("GPIO Number 2 is a valid wakeup pin.");
     // }
+
 // Timer wakeup code
     // if (esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP_uS * uS_TO_S_FACTOR) == ESP_OK)
     // {
@@ -368,10 +373,8 @@ void WiFiEvent(WiFiEvent_t event)
     }
 } // void WiFiEvent(WiFiEvent_t event)
 
-/*
-Method to print the reason by which ESP32
-has been awaken from sleep
-*/
+// Method to print the reason by which ESP32 has been awaken from sleep
+
 void print_wakeup_reason()
 {
     esp_sleep_wakeup_cause_t wakeup_reason;
@@ -443,26 +446,12 @@ void checkBatteryVoltage()
     }
     if (mqttClient.connected())
     {
-        String data = "";
-        data = "{\"batt\":\"" + String(Vbattf) + "\"}";
+        String data = "{";
+        data += "\"batt\":\"" + String(Vbattf) + "\",";
+        data += "\"pwr\":\"" + pwrSource + "\"";
+        data += "}";
 
-        debugp("Voltage: ");
-        debugpln((data));
-
-        if (mqttClient.publish(MQTT_SENSOR_TOPIC, data.c_str(), true))
-        {
-            debugpln("MQTT Message sent successfully");
-        }
-        else
-        {
-            debugpln("Error sending MQTT Message");
-        }
-
-        data = "";
-        data = "{\"pwr\":\"" + pwrSource + "\"}";
-        //data = "{\"usb\":\"" + String(fiveVoltPin) + "\"}";
-
-        debugp("Power: ");
+        debugp("Data String: ");
         debugpln((data));
 
         if (mqttClient.publish(MQTT_SENSOR_TOPIC, data.c_str(), true))
