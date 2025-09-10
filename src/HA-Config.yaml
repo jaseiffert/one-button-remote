@@ -3,8 +3,8 @@ sensor:
   - name: "Remote Lamp Battery"
     unique_id: bedroom_lamp_remote_battery
     state_topic: "bedroom/lamp/remote"
-    value_template: "{{ value_json.batt }}"
     unit_of_measurement: "v"
+    value_template: "{{ value_json.batt }}"
 
   - name: "Remote Lamp Power"
     unique_id: bedroom_lamp_remote_pwr
